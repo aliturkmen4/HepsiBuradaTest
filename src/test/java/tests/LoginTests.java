@@ -1,3 +1,5 @@
+package tests;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,18 +10,24 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.AnaSayfa;
+import pages.GirisYapSayfasi;
 
 import java.time.Duration;
 
 public class LoginTests {
 
-    WebDriver driver;
+    private WebDriver driver;
+    private AnaSayfa anaSayfa;
+    private GirisYapSayfasi girisYapSayfasi;
 
     @Before
     public void setUp() throws Exception {
         driver=new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        anaSayfa=new AnaSayfa(driver);
+        girisYapSayfasi=new GirisYapSayfasi(driver);
     }
 
     @Test
@@ -27,19 +35,19 @@ public class LoginTests {
 
         driver.get("https://www.hepsiburada.com");
 
-        WebElement cookies= driver.findElement(By.xpath("//*[@id='onetrust-accept-btn-handler']"));
+        WebElement cookies= driver.findElement(By.id("onetrust-accept-btn-handler"));
         cookies.click();
 
         WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(5L)); //koşulların oluşması için bekleyeceğim süre
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("myAccount"))); //bahsettiğim element oluşmuş mu kontrolü
-        driver.findElement(By.xpath("//*[@id='myAccount']")).click();
+        driver.findElement(By.id("myAccount")).click();
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[@id='login']")));
-        driver.findElement(By.xpath("//a[@id='login']")).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
+        driver.findElement(By.id("login")).click();
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='txtUserName']")));
-        driver.findElement(By.xpath("//*[@id='txtUserName']")).sendKeys("aliturkmenn9@gmail.com", Keys.ENTER);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("txtUserName")));
+        driver.findElement(By.id("txtUserName")).sendKeys("aliturkmenn9@gmail.com", Keys.ENTER);
 
     }
 
