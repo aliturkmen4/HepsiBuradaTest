@@ -1,15 +1,10 @@
 package tests;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.AnaSayfa;
 import pages.GirisYapSayfasi;
 
@@ -21,38 +16,42 @@ public class LoginTests {
     private AnaSayfa anaSayfa;
     private GirisYapSayfasi girisYapSayfasi;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         driver=new ChromeDriver();
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
         anaSayfa=new AnaSayfa(driver);
         girisYapSayfasi=new GirisYapSayfasi(driver);
+        driver.get("https://www.hepsiburada.com");
     }
+
 
     @Test
     public void hepsiburadaLoginTesti() throws InterruptedException {
 
-        driver.get("https://www.hepsiburada.com");
+        anaSayfa.elementGoruneneKadarBekle(anaSayfa.hesabim);
+        anaSayfa.butonaTikla(anaSayfa.hesabim);
 
-        WebElement cookies= driver.findElement(By.id("onetrust-accept-btn-handler"));
-        cookies.click();
+        anaSayfa.elementGoruneneKadarBekle(anaSayfa.girisYap);
+        anaSayfa.butonaTikla(anaSayfa.girisYap);
 
-        WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(5L)); //koşulların oluşması için bekleyeceğim süre
+        girisYapSayfasi.elementGoruneneKadarBekle(girisYapSayfasi.emailAdresi);
+        girisYapSayfasi.alanaYaziYaz(girisYapSayfasi.emailAdresi,"aliturkenn9@gmail.com");
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("myAccount"))); //bahsettiğim element oluşmuş mu kontrolü
-        driver.findElement(By.id("myAccount")).click();
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("login")));
-        driver.findElement(By.id("login")).click();
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("txtUserName")));
-        driver.findElement(By.id("txtUserName")).sendKeys("aliturkmenn9@gmail.com", Keys.ENTER);
-
+        girisYapSayfasi.elementGoruneneKadarBekle(girisYapSayfasi.girisYapTusu);
+        girisYapSayfasi.butonaTikla(girisYapSayfasi.girisYapTusu);
     }
 
-    @After
+    @Test()
+    public void hepsiburadaUrunAramaTesti() throws InterruptedException {
+
+        anaSayfa.elementGozukeneKadarBekleCss(anaSayfa.urunArama);
+        anaSayfa.alanaYaziYazCss(anaSayfa.urunArama, "Araba");
+        anaSayfa.klavyeTusunaBas(anaSayfa.urunArama, Keys.ENTER);
+    }
+
+    @AfterEach
     public void tearDown() throws Exception {
-        driver.close();
+        driver.quit();
     }
 }
